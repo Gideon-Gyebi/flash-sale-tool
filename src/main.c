@@ -58,8 +58,8 @@ void updateProduct(char code[], char name[], float orig, float flash){
         char existingCode[50]; sscanf(line,"%[^,]",existingCode);
         if(strcmp(existingCode, code)==0){
             float discount=((orig-flash)/orig)*100;
-            fprintf(temp,"%s,%s,%.2f,%.2f,Flash Sale: %s now %.2f instead of %.2f (%.0f%% off)\n",
-                    code,name,orig,flash,name,flash,orig,discount);
+            fprintf(temp,"%s,%s,%.2f,%.2f,! ! ! CLEARANCE SALES -> Now GH₵%.2f (Original Price GH₵%.2f) (%.0f%% off) Grab yours before stock runs out!\n",
+                    code,name,orig,flash,flash,orig,discount);
         } else { fputs(line,temp); }
     }
     fclose(file); fclose(temp);
@@ -166,8 +166,8 @@ int main(){
         } else {
             file=fopen(CSV_FILE,"a");
             float discount=((originalPrice-flashPrice)/originalPrice)*100;
-            fprintf(file,"%s,%s,%.2f,%.2f,Flash Sale: %s now %.2f instead of %.2f (%.0f%% off)\n",
-                    productCode,productName,originalPrice,flashPrice,productName,flashPrice,originalPrice,discount);
+            fprintf(file,"%s,%s,%.2f,%.2f,! ! ! CLEARANCE SALES -> Now GH₵%.2f (Original Price GH₵%.2f) (%.0f%% off) Grab yours before stock runs out!\n",
+                    productCode,productName,originalPrice,flashPrice,flashPrice,originalPrice,discount);
             fclose(file); 
             printf("Product saved successfully!\n");
         }
