@@ -1,20 +1,38 @@
 # Makefile for Flash Sale Tool
 # Automates compilation, cleaning, and optional data reset
 
-# Compiler
+# ----------------- COMPILER -----------------
 CC = gcc
 
-# Target executable
-TARGET = flash_sale_tool
+# ----------------- DIRECTORIES -----------------
+SRC_DIR = src
+OBJ_DIR = obj
+BIN_DIR = bin
+DATA_DIR = data
+ENV_DIR = env
 
-# Source files
-SRC = main.c
+# ----------------- FILES -----------------
+SRC = $(SRC_DIR)/main.c
+OBJ = $(OBJ_DIR)/main.o
+TARGET = $(BIN_DIR)/flash_sales_tool
 
 # ----------------- DEFAULT: compile program -----------------
 all: $(TARGET)
 
-$(TARGET): $(SRC)
-	$(CC) $(SRC) -o $(TARGET)
+# Ensure obj/ and bin/ exist before compiling
+$(TARGET): $(OBJ) | $(OBJ_DIR) $(BIN_DIR)
+	$(CC) $(OBJ) -o $(TARGET)
+
+# Compile object file
+$(OBJ): $(SRC) | $(OBJ_DIR)
+	$(CC) -c $(SRC) -o $(OBJ)
+
+# Create required directories if missing
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
 
 # ----------------- CLEAN: delete only executable -----------------
 clean:
@@ -23,19 +41,27 @@ clean:
 # ----------------- RESET: delete executable AND CSV data -----------------
 reset:
 	rm -f $(TARGET)
-	rm -f data/*.csv
+	rm -f $(DATA_DIR)/*.csv
 
-# Run the program
+# ----------------- RUN: execute program -----------------
+ifeq ($(OS),Windows_NT)
+run: $(TARGET)
+	$(TARGET).exe
+else
 run: $(TARGET)
 	./$(TARGET)
+endif
 
-# Git Setup
-git_setup1:
-	/env/git_setup.bat
-git_setup2:
-	./env/git_setup.sh
+# ----------------- GIT SETUP: unified cross-platform -----------------
+# Detect OS: Windows uses CMD, Linux/Bash uses ./ script
+ifeq ($(OS),Windows_NT)
+git_setup:
+	$(ENV_DIR)/git_setup.bat
+else
+git_setup:
+	./$(ENV_DIR)/git_setup.sh
+endif
 
-# Phony targets to avoid conflicts with files named 'clean' or 'reset'
-.PHONY: all clean reset run git_setup1 git_setup2
-
-# Note: Ensure that the 'data' directory exists before running the program.
+# ----------------- PHONY TARGETS -----------------
+# Ensures make treats these as commands, not files
+.PHONY: all clean reset run git_setup
