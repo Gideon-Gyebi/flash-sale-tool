@@ -27,3 +27,13 @@ flash-sale-tool/
 └─ data/                  <-- CSV storage folder
     ├─ products.csv       <-- Main product data file
     └─ temp.csv           <-- Temporary file for updates
+
+---
+
+## Environment Setup
+
+- Git Setup
+1. Check Git installed
+2. Ask for username
+3. Ask for email
+4. Configure Git
